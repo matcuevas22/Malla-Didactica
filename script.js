@@ -89,14 +89,6 @@ let ramoEditandoPromedioId = null;
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatos();
     aplicarTema(temaActual);
-    
-    // Mostrar pantalla de bienvenida si es primera vez
-    if (primeraVez && ramosDatos.length === 0) {
-        mostrarBienvenida();
-    } else {
-        ocultarBienvenida();
-    }
-    
     renderizarMalla();
     actualizarContadores();
     actualizarGraficoCreditos();
@@ -105,12 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Configurar eventos
 function configurarEventos() {
-    // Botón de inicio en la pantalla de bienvenida
-    const startBtn = document.getElementById('startBtn');
-    if (startBtn) {
-        startBtn.addEventListener('click', ocultarBienvenida);
-    }
-
     document.getElementById('themeSelector').addEventListener('change', (e) => {
         temaActual = e.target.value;
         aplicarTema(temaActual);
@@ -161,23 +147,6 @@ function aplicarTema(nombreTema) {
     document.documentElement.style.setProperty('--gradient', tema.gradient);
     document.documentElement.style.setProperty('--header-gradient', tema.headerGradient);
     renderizarMalla();
-}
-
-// ===== FUNCIONES DE BIENVENIDA =====
-function mostrarBienvenida() {
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    if (welcomeScreen) {
-        welcomeScreen.classList.remove('hidden');
-    }
-}
-
-function ocultarBienvenida() {
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    if (welcomeScreen) {
-        welcomeScreen.classList.add('hidden');
-    }
-    primeraVez = false;
-    guardarDatos();
 }
 
 // ===== FUNCIONES DE PROMEDIO =====
