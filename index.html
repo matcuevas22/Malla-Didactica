@@ -5,24 +5,223 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Malla Didáctica</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <!-- Pantalla de Bienvenida -->
+    <div id="welcomeScreen" class="welcome-screen">
+        <div class="welcome-container">
+            <div class="welcome-header">
+                <h1>📚 Mi Malla Didáctica</h1>
+                <p class="welcome-subtitle">Tu asistente de seguimiento académico</p>
+            </div>
+            
+            <div class="welcome-content">
+                <div class="welcome-section">
+                    <h2>¿Qué es esta app?</h2>
+                    <p>Una herramienta diseñada para que puedas organizar tu carrera universitaria, visualizar tu plan de estudios y hacer seguimiento de tu progreso académico de forma simple e intuitiva.</p>
+                </div>
+                
+                <div class="welcome-section">
+                    <h2>¿Cómo usarla?</h2>
+                    <ul class="welcome-instructions">
+                        <li><strong>Personaliza tu carrera:</strong> Presiona el botón "✏️ Editar Malla" para colocar el nombre, subtítulo y emoji de tu carrera.</li>
+                        <li><strong>Agrega asignaturas:</strong> Usa el botón "➕ Agregar Asignatura" para añadir cada curso que debas tomar.</li>
+                        <li><strong>Marca progreso:</strong> Haz clic en una asignatura para marcarla como completada e ingresa tu promedio.</li>
+                        <li><strong>Cambia el tema:</strong> Selecciona un color en el menú desplegable para personalizar la apariencia.</li>
+                        <li><strong>Comparte tu malla:</strong> Usa los botones "📥 Exportar" e "📤 Importar" para compartir tu carrera con amigos.</li>
+                    </ul>
+                </div>
+                
+                <div class="welcome-stats">
+                    <p>✨ Organiza • 📊 Visualiza • 🚀 Progresa</p>
+                </div>
+            </div>
+            
+            <button id="startBtn" class="welcome-start-btn">Comenzar</button>
+        </div>
+    </div>
+
     <div class="container">
         <header>
-            <h1>🎓 Pedagogía en Matemática</h1>
-            <p class="subtitle">Malla Didáctica - Plan 2026</p>
+            <div class="header-content">
+                <div class="header-title">
+                    <h1 id="mallaTitle">🎓 Pedagogía en Matemática</h1>
+                    <p class="subtitle" id="mallaSubtitle">Malla Didáctica - Plan 2026</p>
+                </div>
+                <div class="header-controls">
+                    <select id="themeSelector" class="theme-selector">
+                        <option value="default">🌸 Rosa Palo</option>
+                        <option value="blue">🔵 Azul</option>
+                        <option value="green">🟢 Verde</option>
+                        <option value="purple">🟣 Púrpura</option>
+                        <option value="orange">🟠 Naranja</option>
+                        <option value="teal">🌊 Turquesa</option>
+                    </select>
+                </div>
+            </div>
         </header>
 
         <div class="controls">
-            <button id="resetBtn" class="reset-btn">↻ Reiniciar Progreso</button>
+            <div class="controls-left">
+                <button id="editBtn" class="control-btn edit-btn">✏️ Editar Malla</button>
+                <button id="resetBtn" class="control-btn reset-btn">↻ Reiniciar Progreso</button>
+            </div>
             <div class="progress-info">
                 <span id="completedCount">0</span> / <span id="totalCount">0</span> ramos completados
+            </div>
+            <div class="controls-right">
+                <button id="exportBtn" class="control-btn export-btn">📥 Exportar</button>
+                <button id="importBtn" class="control-btn import-btn">📤 Importar</button>
             </div>
         </div>
 
         <div class="malla-container">
             <div id="mallaGrid" class="malla-grid">
                 <!-- Los ramos se cargarán aquí con JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edición -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Malla Didáctica</h2>
+                <button class="close-btn" id="closeEditModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="edit-section">
+                    <h3>Información de la Malla</h3>
+                    <div class="form-group">
+                        <label>Emoji de la Carrera (opcional):</label>
+                        <div class="emoji-selector">
+                            <button type="button" class="emoji-btn" data-emoji="🎓">🎓</button>
+                            <button type="button" class="emoji-btn" data-emoji="💻">💻</button>
+                            <button type="button" class="emoji-btn" data-emoji="🔬">🔬</button>
+                            <button type="button" class="emoji-btn" data-emoji="📚">📚</button>
+                            <button type="button" class="emoji-btn" data-emoji="🎨">🎨</button>
+                            <button type="button" class="emoji-btn" data-emoji="⚙️">⚙️</button>
+                            <button type="button" class="emoji-btn" data-emoji="💡">💡</button>
+                            <button type="button" class="emoji-btn" data-emoji="🏥">🏥</button>
+                            <button type="button" class="emoji-btn" data-emoji="📖">📖</button>
+                            <button type="button" class="emoji-btn" data-emoji="🎭">🎭</button>
+                        </div>
+                        <input type="text" id="emojiInput" class="form-input" maxlength="2" placeholder="O escribe un emoji" style="text-align: center; font-size: 1.5em;">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre de la Carrera:</label>
+                        <input type="text" id="titleInput" class="form-input" placeholder="Ej: Pedagogía en Matemática">
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción:</label>
+                        <input type="text" id="subtitleInput" class="form-input" placeholder="Ej: Malla Didáctica - Plan 2026">
+                    </div>
+                </div>
+
+                <div class="edit-section">
+                    <h3>Materias</h3>
+                    <button id="addRamoBtn" class="add-ramo-btn">+ Agregar Materia</button>
+                    <div id="ramosList" class="ramos-list">
+                        <!-- Los ramos se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveEditBtn" class="btn btn-primary">Guardar Cambios</button>
+                <button id="cancelEditBtn" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edición de Ramo -->
+    <div id="ramoModal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2 id="ramoModalTitle">Editar Materia</h2>
+                <button class="close-btn" id="closeRamoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Código:</label>
+                    <input type="text" id="ramoCode" class="form-input" placeholder="Ej: MAT101">
+                </div>
+                <div class="form-group">
+                    <label>Nombre:</label>
+                    <input type="text" id="ramoName" class="form-input" placeholder="Ej: Cálculo I">
+                </div>
+                <div class="form-group">
+                    <label>Créditos:</label>
+                    <input type="number" id="ramoCreditos" class="form-input" min="1" placeholder="Ej: 5">
+                </div>
+                <div class="form-group">
+                    <label>Semestre:</label>
+                    <input type="number" id="ramoSemestre" class="form-input" min="1" placeholder="Ej: 1">
+                </div>
+                <div class="form-group">
+                    <label>Prerequisitos (IDs separados por comas):</label>
+                    <input type="text" id="ramoPrerequisitos" class="form-input" placeholder="Ej: ramo1, ramo2">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="deleteRamoBtn" class="btn btn-danger">Eliminar</button>
+                <button id="saveRamoBtn" class="btn btn-primary">Guardar</button>
+                <button id="cancelRamoBtn" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input hidden para importar -->
+    <input type="file" id="fileInput" accept=".json" style="display: none;">
+
+    <!-- Modal para ingresar promedio -->
+    <div id="promedioModal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>Registrar Promedio</h2>
+                <button class="close-btn" id="closePromedioModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Asignatura: <span id="ramoPromedioNombre"></span></label>
+                </div>
+                <div class="form-group">
+                    <label>Promedio Final (1.0 - 7.0):</label>
+                    <input type="number" id="promedioInput" class="form-input" min="1" max="7" step="0.1" placeholder="Ej: 6.5">
+                </div>
+                <p class="promedio-info">Este promedio se guardará junto con tu progreso académico.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="savePromedioBtn" class="btn btn-primary">Guardar Promedio</button>
+                <button id="cancelPromedioBtn" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Estadísticas de Créditos -->
+    <div class="stats-section">
+        <h2>📊 Estadísticas de Créditos</h2>
+        <div class="stats-container">
+            <div class="chart-wrapper">
+                <canvas id="creditosChart"></canvas>
+            </div>
+            <div class="stats-info">
+                <div class="stat-item">
+                    <span class="stat-label">Total de créditos:</span>
+                    <span class="stat-value" id="totalCreditos">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Créditos completados:</span>
+                    <span class="stat-value" id="creditosCompletados">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Porcentaje completado:</span>
+                    <span class="stat-value" id="porcentajeCompletado">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Promedio general:</span>
+                    <span class="stat-value" id="promedioGeneral">-</span>
+                </div>
             </div>
         </div>
     </div>
